@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#000000" />
+
+  <title>Gravitas Commerce | Custom Shopify Online Store Build</title>
+  <meta name="description" content="Gravitas Commerce delivers custom-built, mobile-first, conversion-optimized Shopify stores for a fixed $500. Unlimited pages, apps, and revisions during the build window. Optional maintenance at $250/month." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://commerce.gravitas.uno" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gravitas Commerce | Custom Shopify Online Store Build" />
+  <meta property="og:description" content="Custom Shopify store/theme build. Mobile-first. Conversion-optimized. Unlimited pages, apps, and revisions during the build window. Optional maintenance at $250/month." />
+  <meta property="og:image" content="https://commerce.gravitas.uno/assets/gravitascommerce.png" />
+  <meta property="og:url" content="https://commerce.gravitas.uno" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts (feel free to swap/host locally if you want) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Structured Data (Service + Offer) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Gravitas Commerce — Powered by Gravitas Industries",
+    "description": "Custom-built Shopify Online Store 2.0 theme + storefront setup for a fixed $500. Mobile-first, conversion-optimized, unlimited pages/apps/revisions during the build window, with optional ongoing maintenance for $250/month.",
+    "provider": {
+      "@type": "Organization",
+      "name": "Gravitas Industries",
+      "url": "https://gravitas.uno"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Shopify Build (Tier Focus Choice)",
+        "price": "500",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "category": "Shopify Development",
+        "description": "Fixed-fee Shopify store build. Choose Tier 1 (Launch-Ready), Tier 2 (Brand Experience), or Tier 3 (Scale + Automation) as the primary focus."
+      },
+      {
+        "@type": "Offer",
+        "name": "Maintenance as a Service",
+        "price": "250",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "category": "Website Maintenance",
+        "description": "Optional monthly retainer for ongoing edits, troubleshooting, and performance monitoring."
+      }
+    ],
+    "areaServed": "Worldwide",
+    "termsOfService": "https://YOUR-USERNAME.github.io/YOUR-REPO/#terms"
+  }
+  </script>
+
+  <style>
+    :root{
+      --bg: #000;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.085);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --faint: rgba(255,255,255,.55);
+      --line: rgba(255,255,255,.12);
+      --glowA: rgba(99, 102, 241, .55);   /* indigo-ish */
+      --glowB: rgba(56, 189, 248, .45);   /* sky-ish */
+      --glowC: rgba(168, 85, 247, .35);   /* violet-ish */
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 28px;
+      --max: 1140px;
+      --font: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+      letter-spacing: .2px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    .bg-ambient{
+      position: fixed;
+      inset: -20vh -20vw;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(60vh 60vh at 20% 15%, var(--glowA), transparent 60%),
+        radial-gradient(70vh 70vh at 80% 20%, var(--glowB), transparent 55%),
+        radial-gradient(70vh 70vh at 50% 85%, var(--glowC), transparent 55%);
+      filter: blur(24px);
+      opacity: .8;
+      transform: translate3d(0,0,0);
+    }
+
+    /* Subtle noise */
+    .bg-noise{
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .07;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: none; }
+
+    .wrap{ width: min(var(--max), calc(100% - 44px)); margin: 0 auto; }
+    .skip{
+      position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .skip:focus{
+      left: 18px; top: 18px; width:auto; height:auto; padding: 10px 12px;
+      background: #111; border: 1px solid var(--line); border-radius: 12px; z-index: 9999;
+    }
+
+    /* Top nav */
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(0,0,0,.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .brand img{
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 0 40px rgba(99,102,241,.25);
+      object-fit: cover;
+    }
+    .brand .name{
+      display:flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand .name strong{
+      font-size: 14px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .brand .name span{
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .02em;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .nav-links a{
+      font-size: 12.5px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 12px;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .nav-links a:hover{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: .02em;
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      white-space: nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.20);
+      background: rgba(255,255,255,.085);
+      box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(99,102,241,.18) inset;
+    }
+    .btn.primary{
+      border-color: rgba(99,102,241,.55);
+      background: linear-gradient(135deg, rgba(99,102,241,.32), rgba(56,189,248,.18));
+      box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 60px rgba(99,102,241,.18);
+    }
+    .btn.primary:hover{
+      border-color: rgba(99,102,241,.75);
+      box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 85px rgba(56,189,248,.22);
+    }
+
+    /* Hero */
+    .hero{
+      padding: 64px 0 28px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .02em;
+      margin-bottom: 14px;
+    }
+    .badge b{
+      color: var(--text);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    h1{
+      margin: 0 0 12px;
+      font-size: clamp(34px, 4.4vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+    }
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16.5px;
+      max-width: 64ch;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+      align-items: center;
+    }
+    .mini{
+      font-size: 12px;
+      color: var(--faint);
+      margin-top: 12px;
+    }
+    .mini a{
+      color: rgba(56,189,248,.9);
+      text-decoration: underline;
+      text-decoration-color: rgba(56,189,248,.35);
+      text-underline-offset: 3px;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+    }
+    .hero-card{
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(360px 240px at 10% 15%, rgba(99,102,241,.28), transparent 65%),
+        radial-gradient(320px 260px at 90% 10%, rgba(56,189,248,.18), transparent 60%),
+        radial-gradient(360px 320px at 60% 90%, rgba(168,85,247,.16), transparent 60%);
+      filter: blur(8px);
+      opacity: .9;
+      z-index: 0;
+      pointer-events:none;
+    }
+    .hero-card > *{ position: relative; z-index: 1; }
+
+    .price{
+      display:flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 6px 0 10px;
+    }
+    .price .big{
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .price .sub{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .bullets{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display:grid;
+      gap: 10px;
+    }
+    .bullets li{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .dot{
+      width: 10px; height: 10px;
+      margin-top: 5px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(99,102,241,.9), rgba(56,189,248,.8));
+      box-shadow: 0 0 24px rgba(99,102,241,.35);
+      flex: 0 0 10px;
+    }
+
+    /* Sections */
+    section{ padding: 54px 0; }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    h2{
+      margin: 0;
+      font-size: clamp(22px, 2.4vw, 30px);
+      letter-spacing: -0.015em;
+      line-height: 1.15;
+    }
+    .subhead{
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 72ch;
+      font-size: 14.5px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .card{
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      min-height: 160px;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.07);
+    }
+    .card h3{
+      margin: 2px 0 8px;
+      font-size: 15px;
+      letter-spacing: .01em;
+    }
+    .card p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Tier cards */
+    .tiers{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .tier{
+      padding: 18px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      position: relative;
+      overflow: hidden;
+    }
+    .tier:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(420px 260px at 50% 0%, rgba(56,189,248,.10), transparent 60%);
+      opacity: .9;
+      pointer-events:none;
+    }
+    .tier > *{ position: relative; z-index: 1; }
+    .tier .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .tier h3{
+      margin: 12px 0 6px;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+    .tier .who{
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .tier ul{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      display:grid;
+      gap: 8px;
+    }
+    .tier .price-row{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+    .tier .price-row b{
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    /* Two-column blocks */
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .list{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display:grid;
+      gap: 10px;
+    }
+    .list li{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Samples */
+    .samples{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .sample{
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .sample strong{ display:block; margin-bottom: 6px; }
+    .sample p{ margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+    .sample a{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(56,189,248,.9);
+      text-decoration: underline;
+      text-decoration-color: rgba(56,189,248,.35);
+      text-underline-offset: 3px;
+    }
+
+    /* FAQ */
+    details{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    details + details{ margin-top: 10px; }
+    summary{
+      cursor:pointer;
+      list-style: none;
+      font-weight: 700;
+      letter-spacing: .01em;
+      outline: none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Footer */
+    footer{
+      padding: 34px 0 44px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+    }
+    .foot{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .foot small{ color: var(--faint); }
+    .foot a{
+      color: rgba(56,189,248,.9);
+      text-decoration: underline;
+      text-decoration-color: rgba(56,189,248,.35);
+      text-underline-offset: 3px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .grid-3, .tiers, .samples{ grid-template-columns: 1fr; }
+      .two{ grid-template-columns: 1fr; }
+      .brand{ min-width: unset; }
+      .nav-links{ display:none; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ scroll-behavior: auto !important; transition: none !important; }
+    }
+
+    /* Focus styling */
+    :focus-visible{
+      outline: 2px solid rgba(56,189,248,.75);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="bg-ambient" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <header class="nav" role="banner">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Gravitas Commerce home">
+        <img src="assets/gravitas-commerce-logo.png" alt="Gravitas Commerce logo" width="40" height="40" />
+        <div class="name">
+          <strong>Gravitas Commerce</strong>
+          <span>Fixed-fee Shopify builds</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" aria-label="Primary navigation">
+        <li><a href="#features">Core Features</a></li>
+        <li><a href="#tiers">Tiers</a></li>
+        <li><a href="#process">Workflow</a></li>
+        <li><a href="#maintenance">Maintenance</a></li>
+        <li><a href="#samples">Work Samples</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <a class="btn primary" href="#contact" aria-label="Get started">
+        Get started
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="top" class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="badge">
+            <b>$500 fixed fee</b>
+            <span>Custom Shopify store build • Mobile-first • Conversion-optimized</span>
+          </div>
+
+          <h1>Launch a premium Shopify storefront—without the traditional dev circus.</h1>
+          <p class="lead">
+            Gravitas Commerce is a high-impact Shopify development service delivering professional, custom-built
+            Online Store 2.0 storefronts for a one-time investment of <strong>$500</strong>.
+            You get unlimited pages, unlimited app integrations, and unlimited revisions within the agreed build window.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#tiers">See the 3 tiers</a>
+            <a class="btn" href="#features">What’s included</a>
+            <a class="btn" href="#samples">View work samples</a>
+          </div>
+
+          <p class="mini">
+            Built by <strong>Emmanuel M.</strong> (Freelance Service Provider) for <a href="https://gravitas.uno" target="_blank" rel="noopener">Gravitas Industries</a>.
+          </p>
+        </div>
+
+        <aside class="panel hero-card" aria-label="Offer summary">
+          <div class="price">
+            <div class="big">$500</div>
+            <div class="sub">once-off • pick a tier focus</div>
+          </div>
+
+          <ul class="bullets">
+            <li><span class="dot" aria-hidden="true"></span><span><strong>Unlimited pages</strong> (landing pages, FAQs, legal pages, etc.) during the build window.</span></li>
+            <li><span class="dot" aria-hidden="true"></span><span><strong>Unlimited apps</strong> installed + configured during the build window (third-party fees paid by client).</span></li>
+            <li><span class="dot" aria-hidden="true"></span><span><strong>Unlimited revisions</strong> and edits during the build window—polish until it feels inevitable.</span></li>
+            <li><span class="dot" aria-hidden="true"></span><span><strong>Optional maintenance</strong> at <strong>$250/month</strong> for ongoing edits + troubleshooting.</span></li>
+          </ul>
+
+          <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn primary" href="#contact">Request a build</a>
+            <a class="btn" href="#terms">View terms</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Core Features (included in every build)</h2>
+            <p class="subhead">
+              Regardless of tier focus, every $500 Shopify build includes the same foundational architecture:
+              strong UX, fast performance, editable sections, and clean structure designed to convert.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>Shopify Store Setup (Online Store 2.0)</h3>
+            <p>Theme setup with custom styling and layout, plus essential configuration: navigation, collections, product templates, and baseline policies/taxes/shipping settings.</p>
+          </div>
+          <div class="card">
+            <h3>Mobile-First UI/UX + Responsive QA</h3>
+            <p>Rigorous responsiveness checks to ensure a seamless shopping experience across phones, tablets, and desktop—no “mobile later” shortcuts.</p>
+          </div>
+          <div class="card">
+            <h3>Custom Sections + Blocks</h3>
+            <p>Reusable homepage and inner-page sections so your team can swap banners, update content, and adjust layouts without developer dependency.</p>
+          </div>
+          <div class="card">
+            <h3>Performance Optimization</h3>
+            <p>Lean scripts, optimized components, and practical performance-minded build habits that keep pages snappy and checkout friction low.</p>
+          </div>
+          <div class="card">
+            <h3>Unlimited Scale During Build</h3>
+            <p>Unlimited pages, unlimited third-party app installations/config, and unlimited revisions/edits within the agreed build window.</p>
+          </div>
+          <div class="card">
+            <h3>Handover + Documentation</h3>
+            <p>Store handover checklist plus admin walkthrough notes for managing products, collections, banners, and day-to-day changes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tiers">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Three tier options (same $500 price—different focus)</h2>
+            <p class="subhead">
+              You’re not paying more for “basic vs premium.” You’re choosing the strategic emphasis that matches your stage.
+              The core inclusions stay constant; the optimization priorities shift.
+            </p>
+          </div>
+        </div>
+
+        <div class="tiers">
+          <article class="tier" aria-label="Tier 1 Launch-Ready Store">
+            <span class="tag">Tier 1 • Launch-Ready</span>
+            <h3>Launch-Ready Store</h3>
+            <p class="who"><strong>Ideal for:</strong> new brands, MVP launches, speed-to-market.</p>
+            <ul>
+              <li>Clean premium homepage + essential inner pages</li>
+              <li>Product + collection templates optimized for clarity</li>
+              <li>Starter SEO setup so you’re live and discoverable fast</li>
+            </ul>
+            <div class="price-row">
+              <span>Fixed fee</span><b>$500</b>
+            </div>
+          </article>
+
+          <article class="tier" aria-label="Tier 2 Brand Experience Theme">
+            <span class="tag">Tier 2 • Brand Experience</span>
+            <h3>Brand Experience Theme</h3>
+            <p class="who"><strong>Ideal for:</strong> premium aesthetics, storytelling, differentiation.</p>
+            <ul>
+              <li>“Designed-not-templated” layout and feel</li>
+              <li>Advanced custom sections (lookbooks, editorial blocks)</li>
+              <li>Enhanced product pages: benefits, FAQs, highlight modules</li>
+            </ul>
+            <div class="price-row">
+              <span>Fixed fee</span><b>$500</b>
+            </div>
+          </article>
+
+          <article class="tier" aria-label="Tier 3 Scale and Automation Build">
+            <span class="tag">Tier 3 • Scale + Automation</span>
+            <h3>Scale + Automation Build</h3>
+            <p class="who"><strong>Ideal for:</strong> growing catalogs, retention, operational efficiency.</p>
+            <ul>
+              <li>Strategic collection architecture for usability and growth</li>
+              <li>App stack configured to boost retention + AOV</li>
+              <li>Automated email foundations and support flows</li>
+            </ul>
+            <div class="price-row">
+              <span>Fixed fee</span><b>$500</b>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Delivery workflow</h2>
+            <p class="subhead">A simple four-phase pipeline designed to ship quickly while keeping quality high.</p>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="card">
+            <h3>Phase 1 — Discovery + Direction</h3>
+            <p>Brand references, audience, product structure, competitor notes, must-haves, and tier focus selection.</p>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Define the storefront structure (pages, collections, navigation)</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Confirm apps, tracking needs, and conversion priorities</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Phase 2 — Structure + Theme Build</h3>
+            <p>Theme setup, global styles, custom sections, templates, and content pages.</p>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Reusable blocks so you can edit without dev help</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Polished UI aligned to your brand identity</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Phase 3 — Integrations + QA</h3>
+            <p>Apps installed/configured, responsiveness checks, performance pass, and friction cleanup.</p>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Mobile-first QA + layout consistency checks</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Performance-minded tweaks and sanity tests</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Phase 4 — Launch + Handover</h3>
+            <p>Final review, launch support, and documentation so you can manage the store confidently.</p>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Handover checklist + admin walkthrough notes</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Ownership of deliverables on final payment</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="maintenance">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Optional Maintenance as a Service ($250/month)</h2>
+            <p class="subhead">
+              For brands that want ongoing support: edits handled, issues resolved, and the storefront kept sharp.
+            </p>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="card">
+            <h3>Included</h3>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Theme/app updates management (where applicable)</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Small site edits: banners, content swaps, minor layout tweaks</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Troubleshooting: theme conflicts, minor bugs, app issues</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Light performance monitoring + ongoing UX tidy-ups</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Monthly mini-report: changes shipped + suggested next steps</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Not included (can be quoted separately)</h3>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Major redesigns or full brand overhauls</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Custom app development</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Complex integrations (ERP/warehouse systems, advanced middleware)</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Large-scale migrations and data restructuring projects</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="terms">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Transparency + ownership</h2>
+            <p class="subhead">
+              The $500 fee is a transparent, once-off cost. You own the theme deliverables and store configuration upon final payment (excluding third-party licenses).
+            </p>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="card">
+            <h3>Client covers ongoing third-party costs</h3>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Shopify plan fees</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Domain registration / DNS</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Paid apps subscriptions (if you choose them)</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Payment gateway / transaction fees</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Ownership on completion</h3>
+            <ul class="list">
+              <li><span class="dot" aria-hidden="true"></span><span>Theme deliverables and store configuration transfer on final payment</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Third-party app licenses remain with their providers</span></li>
+              <li><span class="dot" aria-hidden="true"></span><span>Documentation included so you can self-manage confidently</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="samples">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Work samples</h2>
+            <p class="subhead">Reference builds and live storefront experiences.</p>
+          </div>
+        </div>
+
+        <div class="samples">
+          <div class="sample">
+            <strong>Luna Lux Hair</strong>
+            <p>eCommerce storefront experience with product merchandising patterns and conversion flow.</p>
+            <a href="https://lunaluxhair.com" target="_blank" rel="noopener">Visit site <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="sample">
+            <strong>SkinLabs</strong>
+            <p>Modern skincare brand presence with product discovery and strong brand messaging.</p>
+            <a href="https://skinlabs.co.za" target="_blank" rel="noopener">Visit site <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="sample">
+            <strong>mannuh</strong>
+            <p>Content-first platform UI/UX with polished presentation and structured navigation.</p>
+            <a href="https://mannuh.space" target="_blank" rel="noopener">Visit site <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>FAQ</h2>
+            <p class="subhead">Fast answers to the questions that typically decide whether a build is painless or chaotic.</p>
+          </div>
+        </div>
+
+        <details>
+          <summary>How can the tiers all be $500?</summary>
+          <p>
+            The price is fixed; the tiers simply choose your optimization priority (speed to launch vs brand experience vs scale/automation).
+            The same core inclusions apply to all tiers—your tier determines what gets the most attention first.
+          </p>
+        </details>
+
+        <details>
+          <summary>What does “unlimited revisions” actually mean?</summary>
+          <p>
+            Unlimited revisions and edits apply within the agreed build window and to the same store/theme direction.
+            Continuous polishing is included; a complete pivot into a brand-new direction may extend the timeline.
+          </p>
+        </details>
+
+        <details>
+          <summary>Do you handle apps and plug-ins?</summary>
+          <p>
+            Yes—unlimited app installation and configuration during the build window.
+            Note that paid apps have their own subscription fees, paid directly by the client.
+          </p>
+        </details>
+
+        <details>
+          <summary>Can you maintain the store after launch?</summary>
+          <p>
+            Yes. Maintenance as a Service is optional at $250/month, covering ongoing edits, troubleshooting, and light performance/UX monitoring.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <div class="panel hero-card" style="padding: 22px;">
+          <div class="section-head" style="margin-bottom: 10px;">
+            <div>
+              <h2>Ready to build?</h2>
+              <p class="subhead">
+                Send a message on Upwork with your store niche, product count, and preferred tier focus. We’ll map the build scope and start immediately.
+              </p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap: wrap; justify-content:flex-end;">
+              <!-- Replace with your Upwork profile/job link -->
+              <a class="btn primary" href="https://www.upwork.com/" target="_blank" rel="noopener">Message on Upwork</a>
+              <!-- Optional: replace with email -->
+              <a class="btn" href="mailto:hello@gravitas.uno?subject=Gravitas%20Commerce%20Shopify%20Build%20Request">Email Gravitas</a>
+            </div>
+          </div>
+
+          <p class="mini" style="margin: 8px 0 0;">
+            Tip: Include your brand assets, product catalog size, required apps (reviews, subscriptions, bundles, etc.), and a couple of competitor links for faster kickoff.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="wrap foot">
+      <div style="display:flex; gap:12px; align-items:center;">
+        <img src="assets/gravitas-commerce-logo.png" alt="" width="34" height="34" style="border-radius: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,.10);" />
+        <div>
+          <div style="font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size: 12px;">Gravitas Commerce</div>
+          <small>© <span id="y"></span> Gravitas Industries. Built by Emmanuel M.</small>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:14px; flex-wrap: wrap; align-items:center;">
+        <small><a href="#top">Back to top</a></small>
+        <small><a href="https://gravitas.uno" target="_blank" rel="noopener">gravitas.uno</a></small>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Tiny niceties: dynamic year + smooth-ish anchor behavior
+    document.getElementById("y").textContent = new Date().getFullYear();
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.pushState(null, "", id);
+      });
+    });
+  </script>
+</body>
+</html>
